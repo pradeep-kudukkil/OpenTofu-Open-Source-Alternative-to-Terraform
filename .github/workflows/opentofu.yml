@@ -1,0 +1,31 @@
+name: OpenTofu CI
+
+on:[workflow_dispatch]
+
+jobs:
+  opentofu:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        version: 'latest'
+
+    - name: Initialize OpenTofu
+      run: opentofu init
+
+    - name: Validate OpenTofu configuration
+      run: opentofu validate
+
+    - name: Plan OpenTofu configuration
+      run: opentofu plan
+
+    - name: Apply OpenTofu configuration
+      run: opentofu apply -auto-approve
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
